@@ -120,13 +120,20 @@ function countLevelWords(level) {
   return state.words.filter(item => item.level === level).length;
 }
 
+function getLevelColorClass(level) {
+  if (["DSA", "DSB", "DSC", "DSD"].includes(level)) return "level-red";
+  if (["LSA", "LSB", "LSC", "LSD"].includes(level)) return "level-green";
+  return "";
+}
+
 function renderLevels() {
   const levelGrid = $("levelGrid");
   levelGrid.innerHTML = levelOrder.map(level => {
     const config = curriculum[level];
     const count = countLevelWords(level);
+    const colorClass = getLevelColorClass(level);
     return `
-      <button class="tile-btn" data-level="${level}">
+      <button class="tile-btn ${colorClass}" data-level="${level}">
         <span class="tile-title">${level}</span>
         <span class="tile-sub">${config.description}</span>
         <span class="count-badge">${count.toLocaleString()} words</span>
