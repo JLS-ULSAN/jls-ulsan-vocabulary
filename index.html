@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Master the Words | JLS ULSAN Word Trainer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="brand-badge">JLS ULSAN VOCABULARY</div>
+      <h1>Master the Words</h1>
+      <p>JLS ULSAN Word Trainer</p>
+    </header>
+
+    <main class="main-card">
+      <section id="screen-home" class="screen active">
+        <div class="section-head">
+          <span class="step-pill">STEP 1</span>
+          <h2>레벨을 선택하세요</h2>
+          <p>학습할 레벨을 먼저 선택합니다.</p>
+        </div>
+        <div id="levelGrid" class="grid level-grid"></div>
+      </section>
+
+      <section id="screen-book" class="screen">
+        <button class="back-btn" data-back="home">← 레벨 다시 선택</button>
+        <div class="section-head">
+          <span class="step-pill">STEP 2</span>
+          <h2>책을 선택하세요</h2>
+          <p id="bookHelp">MSA / MSB 레벨은 책을 선택한 뒤 LESSON을 고릅니다.</p>
+        </div>
+        <div id="bookGrid" class="grid book-grid"></div>
+      </section>
+
+      <section id="screen-lesson" class="screen">
+        <button class="back-btn" id="lessonBackBtn">← 이전 단계</button>
+        <div class="section-head">
+          <span class="step-pill">STEP 3</span>
+          <h2>LESSON을 선택하세요</h2>
+          <p id="lessonHelp">각 레벨은 LESSON 1~24로 구성됩니다.</p>
+        </div>
+        <div id="lessonGrid" class="grid lesson-grid"></div>
+      </section>
+
+      <section id="screen-mode" class="screen">
+        <button class="back-btn" data-back="lesson">← LESSON 다시 선택</button>
+        <div class="section-head">
+          <span class="step-pill">STEP 4</span>
+          <h2>학습 모드를 선택하세요</h2>
+          <p id="modeSummary"></p>
+        </div>
+        <div id="modeGrid" class="grid mode-grid"></div>
+      </section>
+
+      <section id="screen-quiz" class="screen">
+        <div class="quiz-topbar">
+          <button class="back-btn compact" data-back="mode">← 모드 선택</button>
+          <div class="progress-wrap">
+            <div class="progress-label"><span id="progressText">1 / 10</span><span id="scoreText">0점</span></div>
+            <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+          </div>
+        </div>
+
+        <div class="quiz-card">
+          <p id="quizModeLabel" class="quiz-mode-label">뜻 고르기</p>
+          <div id="questionArea" class="question-area"></div>
+          <div id="choicesArea" class="choices-area"></div>
+          <div id="typingArea" class="typing-area hidden">
+            <input id="typingInput" type="text" autocomplete="off" placeholder="영어 단어를 입력하세요" />
+            <button id="typingSubmit" class="primary-btn">정답 확인</button>
+          </div>
+          <div id="feedback" class="feedback"></div>
+          <button id="nextBtn" class="primary-btn next-btn hidden">다음 문제</button>
+        </div>
+      </section>
+
+      <section id="screen-result" class="screen">
+        <div class="result-card">
+          <div class="result-emoji">🎉</div>
+          <h2>학습 완료!</h2>
+          <p id="resultSummary" class="result-summary"></p>
+          <div class="result-stats">
+            <div><strong id="statTotal">0</strong><span>총 문제</span></div>
+            <div><strong id="statCorrect">0</strong><span>정답</span></div>
+            <div><strong id="statWrong">0</strong><span>오답</span></div>
+            <div><strong id="statRate">0%</strong><span>정답률</span></div>
+          </div>
+          <div class="result-actions">
+            <button id="reviewWrongBtn" class="primary-btn hidden">오답 복습하기</button>
+            <button id="retryBtn" class="secondary-btn">같은 조건으로 다시 풀기</button>
+            <button id="homeBtn" class="secondary-btn">처음으로</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-note">
+      <span>🔊 스피커 아이콘을 누르면 영어 단어 발음을 들을 수 있습니다.</span>
+    </footer>
+  </div>
+
+  <script src="words-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
