@@ -102,7 +102,10 @@ button, input { font-family: inherit; }
 .section-head p { margin: 0; color: var(--muted); font-size: 16px; }
 
 .grid { display: grid; gap: 14px; }
+.program-grid { grid-template-columns: repeat(2, 1fr); }
 .level-grid { grid-template-columns: repeat(5, 1fr); }
+.category-grid { grid-template-columns: repeat(2, 1fr); }
+.title-grid { grid-template-columns: repeat(3, 1fr); }
 .book-grid { grid-template-columns: repeat(2, 1fr); }
 .lesson-grid { grid-template-columns: repeat(6, 1fr); }
 .mode-grid { grid-template-columns: repeat(5, 1fr); }
@@ -392,7 +395,7 @@ button, input { font-family: inherit; }
 }
 
 @media (max-width: 860px) {
-  .level-grid { grid-template-columns: repeat(2, 1fr); }
+  .program-grid, .level-grid, .category-grid, .title-grid { grid-template-columns: repeat(2, 1fr); }
   .book-grid { grid-template-columns: 1fr; }
   .lesson-grid { grid-template-columns: repeat(4, 1fr); }
   .mode-grid { grid-template-columns: repeat(2, 1fr); }
@@ -401,7 +404,7 @@ button, input { font-family: inherit; }
 @media (max-width: 560px) {
   .app-shell { padding: 16px 12px 26px; }
   .main-card { border-radius: 24px; min-height: 480px; }
-  .level-grid, .lesson-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .program-grid, .level-grid, .category-grid, .title-grid, .lesson-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mode-grid { grid-template-columns: 1fr; }
   .tile-btn { min-height: 88px; padding: 14px 10px; }
   .level-grid .tile-title { font-size: 21px; }
@@ -412,4 +415,17 @@ button, input { font-family: inherit; }
   .result-stats { grid-template-columns: repeat(2, 1fr); }
   .result-actions { flex-direction: column; }
   .result-actions button { width: 100%; }
+}
+
+.program-btn { min-height: 142px; text-align: center; }
+.program-btn .tile-title { font-size: 32px; }
+.chess-card { border-color: rgba(220, 38, 38, 0.28); background: linear-gradient(180deg, #fff7f7, #fee2e2); }
+.chess-card .tile-title { color: #b91c1c; }
+.ace-card { border-color: rgba(37, 99, 235, 0.34); background: linear-gradient(180deg, #f7fbff, #dbeafe); }
+.category-btn .tile-title, .title-btn .tile-title { font-size: 20px; line-height: 1.22; }
+.title-btn { min-height: 120px; }
+@media (max-width: 560px) {
+  .program-btn { min-height: 110px; }
+  .program-btn .tile-title { font-size: 26px; }
+  .category-btn .tile-title, .title-btn .tile-title { font-size: 17px; }
 }
