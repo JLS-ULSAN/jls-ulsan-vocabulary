@@ -105,6 +105,18 @@ function getLevelColorClass(level) {
   if (["LSA", "LSB", "LSC", "LSD"].includes(level)) return "level-green";
   return "";
 }
+
+function getAceCategoryColorClass(category) {
+  const map = {
+    "원어민 활용교재": "ace-cat-native",
+    "Total-map": "ace-cat-total",
+    "Voca-map": "ace-cat-voca",
+    "절대수능-map Voca": "ace-cat-suneung",
+    "수능공습 어휘학습": "ace-cat-gongseup"
+  };
+  return map[category] || "";
+}
+
 function contextText() {
   const parts = [state.program, state.category, state.title, state.book, state.chapter].filter(Boolean);
   return parts.join(" · ");
@@ -153,7 +165,7 @@ function renderBooks(level) {
 function renderAceCategories() {
   $("categoryGrid").innerHTML = aceCategoryOrder.map(category => {
     const count = countWords(w => w.program === "에이스" && w.category === category);
-    return `<button class="tile-btn category-btn" data-category="${escapeHTML(category)}"><span class="tile-title">${escapeHTML(category)}</span><span class="tile-sub">세부 교재 선택</span><span class="count-badge">${count.toLocaleString()} words</span></button>`;
+    return `<button class="tile-btn category-btn ${getAceCategoryColorClass(category)}" data-category="${escapeHTML(category)}"><span class="tile-title">${escapeHTML(category)}</span><span class="tile-sub">세부 교재 선택</span><span class="count-badge">${count.toLocaleString()} words</span></button>`;
   }).join("");
   $("categoryGrid").querySelectorAll("[data-category]").forEach(btn => btn.addEventListener("click", () => selectAceCategory(btn.dataset.category)));
 }

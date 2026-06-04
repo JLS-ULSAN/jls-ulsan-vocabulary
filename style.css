@@ -429,3 +429,62 @@ button, input { font-family: inherit; }
   .program-btn .tile-title { font-size: 26px; }
   .category-btn .tile-title, .title-btn .tile-title { font-size: 17px; }
 }
+
+
+/* ACE category colors: current blue-based design with soft differentiated tones */
+.category-btn {
+  position: relative;
+  overflow: hidden;
+}
+.category-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(255,255,255,0.62), transparent 42%);
+  pointer-events: none;
+}
+.category-btn .tile-title,
+.category-btn .tile-sub,
+.category-btn .count-badge {
+  position: relative;
+  z-index: 1;
+}
+.ace-cat-native {
+  border-color: rgba(124, 58, 237, 0.28);
+  background: linear-gradient(180deg, #faf5ff, #ede9fe);
+}
+.ace-cat-native .tile-title { color: #6d28d9; }
+.ace-cat-native .count-badge { background: #f3e8ff; color: #6d28d9; }
+.ace-cat-native:hover { border-color: rgba(124, 58, 237, 0.48); box-shadow: 0 16px 32px rgba(124, 58, 237, 0.16); }
+
+.ace-cat-total {
+  border-color: rgba(37, 99, 235, 0.28);
+  background: linear-gradient(180deg, #eff6ff, #dbeafe);
+}
+.ace-cat-total .tile-title { color: #1d4ed8; }
+.ace-cat-total .count-badge { background: #dbeafe; color: #1d4ed8; }
+.ace-cat-total:hover { border-color: rgba(37, 99, 235, 0.50); box-shadow: 0 16px 32px rgba(37, 99, 235, 0.16); }
+
+.ace-cat-voca {
+  border-color: rgba(5, 150, 105, 0.28);
+  background: linear-gradient(180deg, #ecfdf5, #d1fae5);
+}
+.ace-cat-voca .tile-title { color: #047857; }
+.ace-cat-voca .count-badge { background: #d1fae5; color: #047857; }
+.ace-cat-voca:hover { border-color: rgba(5, 150, 105, 0.50); box-shadow: 0 16px 32px rgba(5, 150, 105, 0.15); }
+
+.ace-cat-suneung {
+  border-color: rgba(217, 119, 6, 0.30);
+  background: linear-gradient(180deg, #fffbeb, #fef3c7);
+}
+.ace-cat-suneung .tile-title { color: #b45309; }
+.ace-cat-suneung .count-badge { background: #fef3c7; color: #b45309; }
+.ace-cat-suneung:hover { border-color: rgba(217, 119, 6, 0.50); box-shadow: 0 16px 32px rgba(217, 119, 6, 0.15); }
+
+.ace-cat-gongseup {
+  border-color: rgba(225, 29, 72, 0.26);
+  background: linear-gradient(180deg, #fff1f2, #ffe4e6);
+}
+.ace-cat-gongseup .tile-title { color: #be123c; }
+.ace-cat-gongseup .count-badge { background: #ffe4e6; color: #be123c; }
+.ace-cat-gongseup:hover { border-color: rgba(225, 29, 72, 0.46); box-shadow: 0 16px 32px rgba(225, 29, 72, 0.14); }
