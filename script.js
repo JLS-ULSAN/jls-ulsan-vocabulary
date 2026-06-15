@@ -296,6 +296,14 @@ function getWordsForUnit(unitName = state.chapter) {
     if (w.program !== state.program) return false;
     if (state.program === "체스") {
       if (w.title !== state.title) return false;
+
+      // MSA/MSB는 책 선택 화면에서 Lesson 1~6과 Glossary가 같은 화면에 표시됩니다.
+      // 이때 버튼 개수 계산 단계에서는 state.category가 아직 "Glossary"로 바뀌기 전이므로,
+      // unitName이 "Glossary"이면 Glossary 단어를 바로 찾도록 별도 처리합니다.
+      if ((state.title === "MSA" || state.title === "MSB") && state.book && unitName === "Glossary") {
+        return w.category === "Glossary" && w.book === state.book && w.chapter === "Glossary";
+      }
+
       if (state.category === "Glossary") {
         if (w.category !== "Glossary") return false;
         if (state.book && w.book !== state.book) return false;
