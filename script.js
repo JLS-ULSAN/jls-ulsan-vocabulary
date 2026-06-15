@@ -147,19 +147,78 @@ function renderChessLevels() {
   $("levelGrid").querySelectorAll("[data-level]").forEach(btn => btn.addEventListener("click", () => selectChessLevel(btn.dataset.level)));
 }
 function selectChessLevel(level) {
-  state.title = level; state.book = ""; state.chapter = "";
+  state.title = level; state.book = ""; state.chapter = ""; state.category = "";
   const config = chessCurriculum[level];
   if (config.type === "book") { renderBooks(level); showScreen("book"); }
-  else { renderLearningUnits("level"); showScreen("lesson"); }
+  else { renderChessPathOptions(level); showScreen("lesson"); }
 }
+
+function renderChessPathOptions(level) {
+  const lessonCount = countWords(item => item.program === "체스" && item.category !== "Glossary" && item.title === level && !item.book);
+  const glossaryCount = countWords(item => item.program === "체스" && item.category === "Glossary" && item.title === level);
+  $("lessonStep").textContent = "STEP 3";
+  $("lessonTitle").textContent = `${level} 학습 유형을 선택하세요`;
+  $("lessonHelp").textContent = glossaryCount > 0 ? "기존 Lesson 또는 Glossary 중 선택합니다." : "이 레벨은 Glossary 없이 Lesson만 학습합니다.";
+  $("lessonBackBtn").setAttribute("data-back", "level");
+  const items = [
+    `<button class="tile-btn lesson-btn" data-chess-path="lesson"><span class="tile-title">Lesson</span><span class="tile-sub">Lesson 1~24</span><span class="count-badge">${lessonCount.toLocaleString()} words</span></button>`
+  ];
+  if (glossaryCount > 0) {
+    items.push(`<button class="tile-btn lesson-btn glossary-btn" data-chess-path="glossary"><span class="tile-title">Glossary</span><span class="tile-sub">${level} 1 / ${level} 2</span><span class="count-badge">${glossaryCount.toLocaleString()} words</span></button>`);
+  }
+  $("lessonGrid").innerHTML = items.join("");
+  $("lessonGrid").querySelectorAll("[data-chess-path]").forEach(btn => btn.addEventListener("click", () => {
+    const path = btn.dataset.chessPath;
+    if (path === "lesson") {
+      state.category = ""; state.book = ""; state.chapter = "";
+      renderLearningUnits("chessPath"); showScreen("lesson");
+    } else {
+      state.category = "Glossary"; state.book = ""; state.chapter = "";
+      renderGlossaryLevels(); showScreen("lesson");
+    }
+  }));
+}
+
+function renderGlossaryLevels() {
+  const levels = unique(state.words.filter(w => w.program === "체스" && w.category === "Glossary" && w.title === state.title).map(w => w.book));
+  const ordered = levels.sort((a,b) => naturalNumber(a) - naturalNumber(b) || String(a).localeCompare(String(b), "ko"));
+  $("lessonStep").textContent = "STEP 4";
+  $("lessonTitle").textContent = `${state.title} Glossary를 선택하세요`;
+  $("lessonHelp").textContent = "Glossary 1 또는 2를 선택합니다.";
+  $("lessonBackBtn").setAttribute("data-back", "chessPath");
+  $("lessonGrid").innerHTML = ordered.map(name => {
+    const count = countWords(w => w.program === "체스" && w.category === "Glossary" && w.title === state.title && w.book === name);
+    return `<button class="tile-btn lesson-btn glossary-btn" data-glossary-level="${escapeHTML(name)}"><span class="tile-title">${escapeHTML(name)}</span><span class="tile-sub">세부 단계 선택</span><span class="count-badge">${count.toLocaleString()} words</span></button>`;
+  }).join("");
+  if (!ordered.length) $("lessonGrid").innerHTML = `<div class="empty-state" style="grid-column:1/-1;">이 레벨에는 아직 Glossary 단어가 없습니다.</div>`;
+  $("lessonGrid").querySelectorAll("[data-glossary-level]").forEach(btn => btn.addEventListener("click", () => {
+    state.book = btn.dataset.glossaryLevel; state.chapter = ""; state.category = "Glossary";
+    renderGlossarySheets(); showScreen("lesson");
+  }));
+}
+
+function renderGlossarySheets() {
+  const sheets = unique(state.words.filter(w => w.program === "체스" && w.category === "Glossary" && w.title === state.title && w.book === state.book).map(w => w.chapter));
+  const ordered = sortNatural(sheets);
+  $("lessonStep").textContent = "STEP 5";
+  $("lessonTitle").textContent = "세부 단계를 선택하세요";
+  $("lessonHelp").textContent = `${state.title} · ${state.book}의 세부 단계는 업로드한 엑셀 시트명 기준입니다.`;
+  $("lessonBackBtn").setAttribute("data-back", "glossaryLevel");
+  $("lessonGrid").innerHTML = ordered.map(sheetName => {
+    const count = countWords(w => w.program === "체스" && w.category === "Glossary" && w.title === state.title && w.book === state.book && w.chapter === sheetName);
+    return `<button class="tile-btn lesson-btn glossary-btn" data-unit="${escapeHTML(sheetName)}"><span class="tile-title">${escapeHTML(sheetName)}</span><span class="tile-sub">${count.toLocaleString()} words</span></button>`;
+  }).join("");
+  $("lessonGrid").querySelectorAll("[data-unit]").forEach(btn => btn.addEventListener("click", () => { state.chapter = btn.dataset.unit; renderModes(); showScreen("mode"); }));
+}
+
 function renderBooks(level) {
   const config = chessCurriculum[level];
   $("bookHelp").textContent = `${level} 레벨의 책을 선택하세요.`;
   $("bookGrid").innerHTML = config.books.map(book => {
     const count = countWords(item => item.program === "체스" && item.title === level && item.book === book);
-    return `<button class="tile-btn" data-book="${escapeHTML(book)}"><span class="tile-title">${escapeHTML(book)}</span><span class="tile-sub">LESSON 1~6</span><span class="count-badge">${count.toLocaleString()} words</span></button>`;
+    return `<button class="tile-btn" data-book="${escapeHTML(book)}"><span class="tile-title">${escapeHTML(book)}</span><span class="tile-sub">LESSON 1~6 · Glossary</span><span class="count-badge">${count.toLocaleString()} words</span></button>`;
   }).join("");
-  $("bookGrid").querySelectorAll("[data-book]").forEach(btn => btn.addEventListener("click", () => { state.book = btn.dataset.book; renderLearningUnits("book"); showScreen("lesson"); }));
+  $("bookGrid").querySelectorAll("[data-book]").forEach(btn => btn.addEventListener("click", () => { state.book = btn.dataset.book; state.category = ""; renderLearningUnits("book"); showScreen("lesson"); }));
 }
 
 function renderAceCategories() {
@@ -196,12 +255,17 @@ function renderLearningUnits(backTarget) {
   $("lessonTitle").textContent = `${label}을 선택하세요`;
   $("lessonHelp").textContent = `${contextText()}의 학습 단위를 선택하세요. 단어가 있는 항목만 선택할 수 있습니다.`;
   $("lessonBackBtn").setAttribute("data-back", backTarget);
+  $("lessonStep").textContent = state.program === "체스" && !state.book ? "STEP 4" : "STEP 4";
 
   let units;
   if (state.program === "체스") {
     const level = state.title;
     const cfg = chessCurriculum[level];
     units = Array.from({length: cfg.lessons}, (_,i)=>`LESSON ${i+1}`);
+    if (cfg.type === "book" && state.book) {
+      const glossaryCount = countWords(w => w.program === "체스" && w.category === "Glossary" && w.title === level && w.book === state.book && w.chapter === "Glossary");
+      if (glossaryCount > 0) units.push("Glossary");
+    }
   } else {
     units = unique(state.words.filter(w => w.program === state.program && w.category === state.category && w.title === state.title).map(w => w.chapter));
     units = sortNatural(units);
@@ -217,15 +281,27 @@ function renderLearningUnits(backTarget) {
   $("lessonGrid").innerHTML = units.map(unit => {
     const count = getWordsForUnit(unit).length;
     const disabled = count === 0;
-    return `<button class="tile-btn lesson-btn ${disabled ? "disabled" : ""}" ${disabled ? "disabled" : ""} data-unit="${escapeHTML(unit)}"><span class="tile-title">${escapeHTML(unit)}</span><span class="tile-sub">${disabled ? "단어 없음" : `${count.toLocaleString()} words`}</span></button>`;
+    const isGlossary = unit === "Glossary";
+    return `<button class="tile-btn lesson-btn ${isGlossary ? "glossary-btn" : ""} ${disabled ? "disabled" : ""}" ${disabled ? "disabled" : ""} data-unit="${escapeHTML(unit)}"><span class="tile-title">${escapeHTML(unit)}</span><span class="tile-sub">${disabled ? "단어 없음" : `${count.toLocaleString()} words`}</span></button>`;
   }).join("");
-  $("lessonGrid").querySelectorAll("[data-unit]:not(:disabled)").forEach(btn => btn.addEventListener("click", () => { state.chapter = btn.dataset.unit; renderModes(); showScreen("mode"); }));
+  $("lessonGrid").querySelectorAll("[data-unit]:not(:disabled)").forEach(btn => btn.addEventListener("click", () => {
+    const unit = btn.dataset.unit;
+    if (state.program === "체스" && (state.title === "MSA" || state.title === "MSB") && state.book && unit === "Glossary") state.category = "Glossary";
+    else if (state.program === "체스") state.category = "";
+    state.chapter = unit; renderModes(); showScreen("mode");
+  }));
 }
 function getWordsForUnit(unitName = state.chapter) {
   return state.words.filter(w => {
     if (w.program !== state.program) return false;
     if (state.program === "체스") {
       if (w.title !== state.title) return false;
+      if (state.category === "Glossary") {
+        if (w.category !== "Glossary") return false;
+        if (state.book && w.book !== state.book) return false;
+        return w.chapter === unitName;
+      }
+      if (w.category === "Glossary") return false;
       if (state.book && w.book !== state.book) return false;
       if (!state.book && w.book) return false;
       return w.chapter === unitName;
@@ -335,7 +411,11 @@ function showResult() {
   $("statTotal").textContent = total; $("statCorrect").textContent = correct; $("statWrong").textContent = wrong; $("statRate").textContent = `${rate}%`;
   $("reviewWrongBtn").classList.toggle("hidden", state.wrongWords.length === 0); showScreen("result");
 }
-function goBack(target) { showScreen(target); }
+function goBack(target) {
+  if (target === "chessPath") { state.category = ""; state.book = ""; state.chapter = ""; renderChessPathOptions(state.title); showScreen("lesson"); return; }
+  if (target === "glossaryLevel") { state.category = "Glossary"; state.book = ""; state.chapter = ""; renderGlossaryLevels(); showScreen("lesson"); return; }
+  showScreen(target);
+}
 function goHome() { Object.assign(state, { program:null, category:"", title:"", book:"", chapter:"", selectedMode:null }); showScreen("home"); }
 function bindEvents() {
   document.querySelectorAll("[data-back]").forEach(btn => btn.addEventListener("click", () => goBack(btn.getAttribute("data-back"))));

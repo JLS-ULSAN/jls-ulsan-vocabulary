@@ -1,24 +1,26 @@
-# JLS ULSAN VOCABULARY - ACE Expanded Version
+# JLS ULSAN VOCABULARY
 
-기존 체스 레벨을 유지하고, 에이스 과정 단어를 추가한 버전입니다.
+GitHub Pages용 단어 학습 웹앱입니다.
+
+## 반영 내용
+
+- 체스 기존 Lesson 단어 유지
+- 에이스 단어 유지
+- 체스 Glossary 단어 추가 반영
+- DSA는 Glossary 없음
+- DSB~LSD는 Glossary 1 / 2 선택 후 엑셀 시트명 기준 세부 단계 선택
+- MSA/MSB는 각 책의 Glossary 선택 시 모든 시트 단어를 통합하여 바로 학습 모드로 이동
 
 ## 단어 수
 
-- 체스: 7,886개
-- 에이스: 32,000개
-- 전체: 39,886개
+- 전체 단어 수: 46,719개
+- 이번 추가 반영: 610개
 
-## 구조
+## 파일 구성
 
-- 체스: DSA, DSB, DSC, DSD, LSA, LSB, LSC, LSD, MSA, MSB
-- 에이스: 원어민 활용교재, Total-map, Voca-map, 절대수능-map Voca, 수능공습 어휘학습
-
-## 사용 방법
-
-1. 압축을 풉니다.
-2. `index.html`을 실행합니다.
-3. GitHub Pages에 업로드할 때는 이 폴더 안의 파일들을 저장소 루트에 업로드합니다.
-
-## 포함 기능
-
-뜻 고르기, 단어 고르기, 철자 입력, OX 테스트, 4지선다 퀴즈, 발음 듣기, 오답 복습, 모바일 최적화.
+- index.html
+- style.css
+- script.js
+- words-data.js
+- words.json
+- README.md
